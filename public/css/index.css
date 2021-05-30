@@ -1,0 +1,16 @@
+main{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+}
+
+#messages{
+    border: 1px solid black;
+    width: 500px;
+    height: 700px;
+}
+
+#message{
+    margin-top: 20px;
+    width: 500px;
+}
