@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
             controller = new AbortController()
             signal = controller.signal
             getMessages(nick, signal)
+            clearMessageInput()
         }
     })
 
