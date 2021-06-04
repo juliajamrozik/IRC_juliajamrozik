@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
+    //uzywam abortcontroller aby anulowac zapytania asynchroniczne
     let controller = new AbortController()
+    //wlasciwosc signal, która pozwala
+    // powiązać konkretne zapytanie do serwera z odpowiednim sygnałem
     let signal = controller.signal
 
     let nick = ""
@@ -10,11 +13,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const messageInput = document.getElementById("message")
     messageInput.addEventListener("keydown", e => {
+        //po nacisnieciu enter, wywolujemy funkcje sendMessage, getMessages
+        //oraz czyscimy pole do wprowadzania 
         if (e.keyCode == 13) {
+            //anulowanie obslugi sygnalu
             controller.abort()
             sendMessage(messageInput.value, nick)
-
-
             controller = new AbortController()
             signal = controller.signal
             getMessages(nick, signal)
@@ -62,6 +66,7 @@ async function getMessages(nick, signal) {
 }
 
 async function sendMessage(message, nick) {
+    //funkcja odpowiadajaca za wysylanie 
     const res = await fetch("/message", {
         method: "POST",
         headers: {
@@ -74,17 +79,21 @@ async function sendMessage(message, nick) {
         throw new Error("Błąd zapytania - " + res.status)
 
     const data = await res.json()
+    //update diva
     updateMessagesDiv(data)
 }
 
 function updateMessagesDiv(messageObj) {
+    //aktualizacja wiadomosci
     const messagesDiv = document.getElementById("messages")
     const line = `<p>[${messageObj.time}]<<span style='color:#${messageObj.color}'>@${messageObj.nick}</span>> ${messageObj.message}</p>`
     messagesDiv.innerHTML += line
+    //emotikonki
     $("#messages").emoticonize();
 }
 
 function clearMessageInput() {
+    //no i czyszczenie inputa
     const messageInput = document.getElementById("message")
     messageInput.value = ""
 }

@@ -3,8 +3,10 @@ const app = express()
 const PORT = process.env.PORT || 3000;
 
 const id = 1
+//przechowywanie userow
 const users = []
 
+//przechowywanie wiadomosci
 const messages = []
 
 
@@ -23,6 +25,7 @@ app.post("/login", (req, res) => {
 
     const color = randomColor()
 
+    //sprawdzanie czy istnieje taki uzytkownik, jesli tak to zwracamy: user_exist
     const index = users.findIndex(u => u.nick.toLowerCase() == nick.toLowerCase())
     if (index > 0) {
         res.json({ status: "USER_EXIST" })
@@ -34,6 +37,7 @@ app.post("/login", (req, res) => {
 
 app.get("/messages", (req, res) => {
     let length = messages.length
+    //ustawienie interwalu, zeby wiadomosci sie aktualizowaly
     const inreval = setInterval(() => {
         if (messages.length != length) {
             // console.log(nick)
@@ -41,10 +45,11 @@ app.get("/messages", (req, res) => {
             length = messages.length
             clearInterval(inreval)
         }
-    }, 1000);
+    }, 100);
 })
 
 //{nick, color, time, message}
+//konstrukcja pojedynczej wiadomosci
 app.post("/message", (req, res) => {
     const { nick, message } = req.body
     const user = users.find(u => u.nick == nick)
@@ -57,6 +62,7 @@ app.listen(PORT, () => {
     console.log("Server " + PORT)
 })
 
+//losowanie koloru
 function randomColor() {
     return Math.floor(Math.random() * 16777215).toString(16);
 }
